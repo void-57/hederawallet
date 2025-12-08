@@ -333,7 +333,9 @@
       const nonce = await web3.eth.getTransactionCount(fromAddress, 'pending');
 
       // Convert HBAR to Wei (1 HBAR = 10^18 Wei in EVM context)
-      const amountInWei = web3.utils.toWei(amount.toString(), 'ether');
+      
+      const amountString = typeof amount === 'number' ? amount.toFixed(18) : amount.toString();
+      const amountInWei = web3.utils.toWei(amountString, 'ether');
 
       // Prepare transaction object for gas estimation
       let gasLimit = 21000; // Default for existing accounts
