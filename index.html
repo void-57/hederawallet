@@ -1520,9 +1520,6 @@
             
             deriveAddressTimer = setTimeout(async () => {
                 try {
-                    console.log('Attempting to derive address from private key...');
-                    
-                    
                     let evmAddress;
                     try {
                         const walletData = await hederaCrypto.generateMultiChain(privateKey);
@@ -1543,7 +1540,7 @@
                         
                         
                         try {
-                            console.log('Fetching balance for:', evmAddress);
+                           
                             const balanceData = await hederaAPI.getBalance(evmAddress);
                             const balance = balanceData.balance; // Already in HBAR from API
                             balanceEl.innerHTML = `${balance.toFixed(8)} <span class="currency">HBAR</span>`;
@@ -1634,7 +1631,6 @@
                 
                 // Check sender's balance
                 const senderBalance = await hederaAPI.getBalance(senderAddress);
-                console.log('Sender balance:', senderBalance.balance, 'HBAR');
                 
                 // Calculate actual gas cost using Web3 API
                 let estimatedGasFee = 0.002; // Default fallback
@@ -1838,7 +1834,13 @@
                     return;
                 }
                 
-                containerEl.style.display = 'block';
+                // Only show recent searches if we're in address search mode
+                if (currentSearchType === 'address') {
+                    containerEl.style.display = 'block';
+                } else {
+                    containerEl.style.display = 'none';
+                }
+                
                 listEl.innerHTML = '';
                 
                 searches.forEach(search => {
@@ -1977,7 +1979,7 @@
 
         // Handle browser back/forward buttons
         window.addEventListener('popstate', function(event) {
-            console.log('Browser navigation detected, reloading from URL...');
+            
             checkAndLoadFromURL();
         });
 
@@ -1989,7 +1991,7 @@
             const txid = urlParams.get('txid');
             
             if (address) {
-                console.log('URL parameter detected - address:', address);
+                
                 // Switch to transactions tab
                 switchTabByPage('transactions');
                 // Update nav button states
@@ -1999,14 +2001,14 @@
                 switchSearchType('address');
                 // Fill in the address (correct ID is 'addressInput')
                 document.getElementById('addressInput').value = address;
-                console.log('Input value set to:', document.getElementById('addressInput').value);
+                
                 // Trigger search with longer delay
                 setTimeout(() => {
-                    console.log('Triggering search...');
+                    
                     handleSearch();
                 }, 1000);
             } else if (hash || txid) {
-                console.log('URL parameter detected - hash/txid:', hash || txid);
+                
                 // Switch to transactions tab
                 switchTabByPage('transactions');
                 // Update nav button states
@@ -2014,12 +2016,12 @@
                 document.querySelectorAll('[data-page="transactions"]').forEach(l => l.classList.add('active'));
                 // Set search type to hash
                 switchSearchType('hash');
-                // Fill in the hash/txid (correct ID is 'hashInput')
+                // Fill in the hash/txid
                 document.getElementById('hashInput').value = hash || txid;
-                console.log('Hash input value set to:', document.getElementById('hashInput').value);
+               
                 // Trigger search with longer delay
                 setTimeout(() => {
-                    console.log('Triggering hash search...');
+                   
                     handleSearch();
                 }, 1000);
             }
