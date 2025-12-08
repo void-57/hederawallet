@@ -260,6 +260,8 @@
         } catch (e) {
           console.warn('Could not fetch block number:', e);
         }
+
+        let memo='';
         
         return {
           id: tx.transaction_id,
